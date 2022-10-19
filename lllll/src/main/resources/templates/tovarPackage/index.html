@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>tor</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+<h1 style="text-align:Center">Товар</h1>
+
+
+<a href="/tovarPackage/tovarAdd" class="btn" style="margin-left:10px">Дабвить товар</a><br>
+<form action="/tovarPackage/filterACCU" method="get">
+  <input name="search" type="text" style="margin: 10px" autocomplete="off" placeholder="Точный поиск по Товару">
+  <input type="submit" value="Найти" style="margin: 10px">
+</form>
+
+<form action="tovarPackage/filter" method="get">
+  <input style="margin: 10px" name="search" type="text" autocomplete="off" placeholder="Неточный поиск по Товару">
+  <input style="margin: 10px" type="submit" value="Найти">
+</form>
+
+<div>
+  <div th:each="el: ${list_tovar}" style="margin: 10px">
+    <h2 th:text="'ID: ' + ${el.getId()}"></h2>
+    <p th:text="'Товар: ' + ${el.getTovar()}"></p>
+    <a th:href="'/tovarPackage/details/' + ${el.getId()}" class="btn" style="background:lightBlue">Подробнее</a>
+  </div>
+</div>
+
+</body>
+</html>

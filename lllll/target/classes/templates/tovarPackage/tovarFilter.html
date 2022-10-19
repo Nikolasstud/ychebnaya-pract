@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Поиск товара</title>
+</head>
+<body>
+<a href="/tovar">Назад</a>
+
+<div>
+  <div th:each="el: ${searchRes}">
+    <h2 th:text="'ID: ' + ${el.getId()}"></h2>
+    <p th:text="'Товар: ' + ${el.getTovar()}"></p>
+    <p th:text="'Артикул: ' + ${el.getArticul}"></p>
+    <p th:text="'Вес: ' + ${el.getVes()}"></p>
+    <p th:text="'Цвет: ' + ${el.getCvet()}"></p>
+    <p th:text="'Кол-во: ' + ${el.getKolvo()}"></p>
+  </div>
+</div>
+</body>
+</html>
