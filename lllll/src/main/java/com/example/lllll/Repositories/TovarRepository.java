@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TovarRepository extends CrudRepository<Tovar, Long> {
 
-    public List<Tovar> findByTovar(String tovar);
-    public List<Tovar> findByTovarContains(String tovar);
+    public List<Tovar> findBynameTovar(String tovars);
+    public List<Tovar> findBynameTovarContains(String tovars);
 }

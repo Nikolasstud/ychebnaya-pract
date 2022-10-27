@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <title>Добавление товара</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <div th:insert="headers/head :: nov"></div>
 </head>
 <body>
-<form method="post">
+<form th:object="${tovar}" method="post">
     <label>
-        <input style="margin:10px" name="tovar" type="text" placeholder="Товар"> <br>
-        <input style="margin:10px" name="articul" type="number" placeholder="Артикул"> <br>
-        <input style="margin:10px" name="ves" type="number" placeholder="Вес"> <br>
-        <input style="margin:10px" name="cvet" type="text" placeholder="цвет"> <br>
-        <input style="margin:10px" name="kolvo" type="number" placeholder="Кол-во"> <br><br>
+        <input th:field="*{nameTovar}" name="nameTovar" type="text" placeholder="Товар" style="margin:10px">
+        <div th:if="${#fields.hasErrors('nameTovar')}" th:errors="*{nameTovar}" style="color: black"></div><br>
+
+        <input th:field="*{articul}" name="articul" type="number"    placeholder="Артикул" style="margin:10px">
+        <div th:if="${#fields.hasErrors('articul')}" th:errors="*{articul}" style="color: black"></div><br>
+
+        <input th:field="*{ves}" name="ves" type="number" placeholder="Вес" style="margin:10px">
+        <div th:if="${#fields.hasErrors('ves')}" th:errors="*{ves}" style="color: black"></div><br>
+
+        <input th:field="*{cvet}" name="cvet" type="text" placeholder="Цвет" style="margin:10px">
+        <div th:if="${#fields.hasErrors('cvet')}" th:errors="*{cvet}" style="color: black"></div><br>
+
+        <input th:field="*{kolvo}" name="kolvo" type="number" placeholder="Кол-во" style="margin:10px">
+        <div th:if="${#fields.hasErrors('kolvo')}" th:errors="*{kolvo}" style="color: black"></div><br><br>
 
         <input style="margin:10px" type="submit" value="Добавить товар">
     </label>
 </form>
-
-<a style="margin:10px" href="/tovar">Отмена</a>
+        <a style="margin:10px" href="/tovar">Отмена</a>>
 </body>
 </html>

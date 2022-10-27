@@ -5,11 +5,13 @@ import com.example.lllll.Repositories.TovarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,36 +32,35 @@ public class TovarController {
         return ("tovarPackage/index");
     }
 
-    @GetMapping("/tovarPackage/tovarAdd")
-    public String TovarAddView() {return ("tovarPackage/tovarAdd");}
+    @GetMapping("/tovarPackage/Add")
+    public String TovarAddView(Tovar tovar) {
+        return ("tovarPackage/tovarAdd");
+    }
 
-    @PostMapping("/tovarPackage/tovarAdd")
-    public String tovarAdd(@RequestParam String tovar,
-                              @RequestParam Integer articul,
-                              @RequestParam String cvet,
-                              @RequestParam Integer kolvo,
-                              @RequestParam Integer ves) {
+    @PostMapping("/tovarPackage/Add")
+    public String tovarAdd(@Valid Tovar tovar,
+                           BindingResult result) {
+        if(result.hasErrors())
+            return ("tovarPackage/tovarAdd");
 
-
-        Tovar tovars = new Tovar(tovar,articul,ves,cvet,kolvo);
-        tovarRepository.save(tovars);
+        tovarRepository.save(tovar);
         return ("redirect:/tovar");
     }
 
     @GetMapping("/tovarPackage/filterACCU")
     public String EmployeeFilterACCU(Model model,
-                                     @RequestParam(name = "search") String tovar) {
+                                     @RequestParam(name = "search") String nameTovar) {
 
-        List<Tovar> tovarList = tovarRepository.findByTovar(tovar);
+        List<Tovar> tovarList = tovarRepository.findBynameTovar(nameTovar);
         model.addAttribute("searchRes", tovarList);
         return ("tovarPackage/tovarFilter");
     }
 
     @GetMapping("/tovarPackage/filter")
-    public String EmployeeFilter(Model model,
-                                 @RequestParam(name = "search") String tovar) {
+    public String TovarFilter(Model model,
+                                 @RequestParam(name = "search") String nameTovar) {
 
-        List<Tovar> tovarList = tovarRepository.findByTovarContains(tovar);
+        List<Tovar> tovarList = tovarRepository.findBynameTovarContains(nameTovar);
         model.addAttribute("searchRes", tovarList);
         return ("tovarPackage/tovarFilter");
     }
@@ -68,10 +69,10 @@ public class TovarController {
     public String TovarDetails(Model model,
                                   @PathVariable long id) {
 
-        Optional<Tovar> tov = tovarRepository.findById(id);
+        Optional<Tovar> t = tovarRepository.findById(id);
         ArrayList<Tovar> result = new ArrayList<>();
 
-        tov.ifPresent(result::add);
+        t.ifPresent(result::add);
         model.addAttribute("tovar", result);
         return ("/tovarPackage/tovarDetails");
     }
@@ -83,31 +84,25 @@ public class TovarController {
         return("redirect:/tovar");
     }
 
+
     @GetMapping("tovarPackage/tovarEdit/{id}")
-    public String CarEdit(Model model,
-                          @PathVariable long id) {
-
-        Tovar emp = tovarRepository.findById(id).orElseThrow();
-        model.addAttribute("tovar", emp);
-        return("/tovarPackage/tovarEdit");
-    }
-    @PostMapping("tovarPackage/tovarEdit/{id}")
     public String TovarEdit(Model model,
-                               @PathVariable long id,
-                               @RequestParam String tovar,
-                               @RequestParam Integer articul,
-                               @RequestParam Integer ves,
-                               @RequestParam Integer cvet,
-                               @RequestParam Integer kolvo) {
+                                @PathVariable long id) {
 
         Tovar emp = tovarRepository.findById(id).orElseThrow();
-        emp.setTovar(tovar);
-        emp.setArticul(articul);
-        emp.setVes(ves);
-        emp.setCvet(cvet);
-        emp.setKolvo(kolvo);
         model.addAttribute("tovar", emp);
-        tovarRepository.save(emp);
-        return("/tovarPackage/tovarDetails");
+        return("tovarPackage/tovarEdit");
+    }
+
+    @PostMapping("tovarPackage/tovarEdit/{id}")
+    public String TovarEdit(@Valid Tovar tovar,
+                                BindingResult bindingResult
+    ){
+        if(bindingResult.hasErrors())
+            return("tovarPackage/tovarEdit");
+
+        tovarRepository.save(tovar);
+
+        return("redirect:/tovarPackage/details/" + tovar.getId());
     }
 }

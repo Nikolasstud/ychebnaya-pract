@@ -2,31 +2,34 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:margin="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
-  <title th:text="Редактирование + ' ' + ${tovar.tovar}"></title>
+  <title th:text="Редактирование + ' ' + ${tovar.nameTovar}"></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <div th:insert="headers/head :: nov"></div>
 
-  <div class="container">
-    <header class="d-flex justify-content-center py-3">
-      <ul class="nav nav-pills">
-        <li class="nav-item" ><a href="/tovar" class="nav-link active" aria-current="page" style="background:SteelBlue">Сотрудники</a></li>
-      </ul>
-    </header>
-  </div>
 </head>
 <body>
 <div th:each="el: ${tovar}" >
   <form method="post">
     <label>
-      <input name="tovar" type="text" placeholder="Фамилия" th:value="${tovar.tovar}" style="margin:10px" > <br>
-      <input name="articul" type="number" placeholder="Имя" th:value="${tovar.articul}"  style="margin:10px"> <br>
-      <input name="ves" type="number" placeholder="Отчество" th:value="${tovar.cvet}" style="margin:10px"> <br>
-      <input name="cvet" type="text" placeholder="Паспорт" th:value="${tovar.ves}" style="margin:10px"> <br>
-      <input name="kolvo" type="number" placeholder="кол-во" th:value="${tovar.kolvo}" maxlength="10" class="form-control" style="margin:10px"> <br><br>
+      <input th:field="*{tovar.nameTovar}" name="nameTovar" type="text" placeholder="Товар" th:value="${tovar.nameTovar}" class="form-control" style="min-width: 100px; width: 300px">
+      <div th:if="${#fields.hasErrors('tovar.nameTovar')}" th:errors="*{tovar.nameTovar}" style="color: black"></div><br>
+
+      <input th:field="*{tovar.articul}" name="articul" type="text" placeholder="Артикул" th:value="${tovar.articul}" class="form-control" style="min-width: 100px; width: 300px">
+      <div th:if="${#fields.hasErrors('tovar.articul')}" th:errors="*{tovar.articul}" style="color: black"></div><br>
+
+      <input th:field="*{tovar.ves}" name="ves" type="text" placeholder="Вес" th:value="${tovar.ves}" class="form-control" style="min-width: 100px; width: 300px">
+      <div th:if="${#fields.hasErrors('tovar.ves')}" th:errors="*{tovar.ves}" style="color: black"></div><br>
+
+      <input th:field="*{tovar.cvet}" name="cvet" type="text" placeholder="Цвет" th:value="${tovar.cvet}" class="form-control" style="min-width: 100px; width: 300px">
+      <div th:if="${#fields.hasErrors('tovar.cvet')}" th:errors="*{tovar.cvet}" style="color: black"></div><br>
+
+      <input th:field="*{tovar.kolvo}" name="kolvo" type="text" placeholder="Количество" th:value="${tovar.kolvo}" class="form-control" style="min-width: 100px; width: 300px">
+      <div th:if="${#fields.hasErrors('tovar.kolvo')}" th:errors="*{tovar.kolvo}" style="color: black"></div><br>
 
       <input type="submit" value="Подтвердить" class="btn btn-info"  style="margin:10px; background:SteelBlue">
     </label>
   </form>
-  <a class="btn" style="background:SteelBlue; margin:10px" th:href="'/tovarPackage/details/' + ${el.getId()}" >Back</a>
+  <a class="btn" style="background:SteelBlue; margin:10px" th:href="'/tovar' + ${el.getId()}" >Back</a>
 </div>
 </body>
 </html>
