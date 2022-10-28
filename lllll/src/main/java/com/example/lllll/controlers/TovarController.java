@@ -2,6 +2,12 @@ package com.example.lllll.controlers;
 
 import com.example.lllll.Models.Tovar;
 import com.example.lllll.Repositories.TovarRepository;
+import com.example.lllll.Models.parametris;
+import com.example.lllll.Models.Provider;
+import com.example.lllll.Models.shop;
+import com.example.lllll.Repositories.parametrisRepository;
+import com.example.lllll.Repositories.providerRepository;
+import com.example.lllll.Repositories.shopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,17 +18,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Controller
 public class TovarController {
     @Autowired
     TovarRepository tovarRepository;
+    @Autowired
+    parametrisRepository ParametrisRepository;
+    @Autowired
+    shopRepository shopRepository;
+    @Autowired
+    providerRepository providerRepository;
 
     @GetMapping("/tovar")
     public String tovar(Model model) {
@@ -33,16 +43,33 @@ public class TovarController {
     }
 
     @GetMapping("/tovarPackage/Add")
-    public String TovarAddView(Tovar tovar) {
+    public String TovarAddView(Tovar tovar, Model model) {
+
+        Iterable<parametris> Param = ParametrisRepository.findAll();
+        ArrayList<parametris> ParamArrayList = new ArrayList<>();
+
+        for(parametris di: Param) {
+            if(di.getOwner() == null) {
+                ParamArrayList.add(di);
+            }
+        }
+        Iterable<Provider> provider = providerRepository.findAll();
+        model.addAttribute("parametris", ParamArrayList);
+        model.addAttribute("provider", provider);
         return ("tovarPackage/tovarAdd");
     }
 
     @PostMapping("/tovarPackage/Add")
     public String tovarAdd(@Valid Tovar tovar,
-                           BindingResult result) {
+                           BindingResult result,
+                           @RequestParam String stranaProizv,
+                           @RequestParam String name) {
         if(result.hasErrors())
             return ("tovarPackage/tovarAdd");
-
+        parametris pr = ParametrisRepository.findBystranaProizv(stranaProizv);
+        Provider provider = providerRepository.findByname(name);
+        tovar.setParametris(pr);
+        tovar.setProvider(provider);
         tovarRepository.save(tovar);
         return ("redirect:/tovar");
     }
@@ -105,4 +132,87 @@ public class TovarController {
 
         return("redirect:/tovarPackage/details/" + tovar.getId());
     }
+
+    @GetMapping("/tovar/parametrisAdd")
+    public String ParametrisAdd(Model model)
+    {
+
+        return ("/tovarPackage/parametrisAdd");
+    }
+
+    @PostMapping("/tovar/parametrisAdd")
+    public String ParametrisAdd(
+            @RequestParam String stranaProizv,
+            @RequestParam String proizv
+    ) {
+        parametris PR = new parametris(stranaProizv,proizv);
+        ParametrisRepository.save(PR);
+        return ("redirect:/tovar");
+    }
+
+    @GetMapping("/tovar/providerAdd")
+    public String ProviderAdd(Model model)
+    {
+        return ("/tovarPackage/providerAdd");
+    }
+
+    @PostMapping("/tovar/providerAdd")
+    public String ProviderAdd(
+            @RequestParam String name,
+            @RequestParam String date
+    ) {
+        Provider prov = new Provider(name,date);
+        providerRepository.save(prov);
+        return ("redirect:/tovar");
+    }
+
+    @GetMapping("/tovar/shopAdd")
+    public String tovarAdd(Model model)
+    {
+        return ("/tovarPackage/shopAdd");
+    }
+    @GetMapping("/tovar/shops")
+    public String shops(Model model)
+    {
+        Iterable<shop> listShop = shopRepository.findAll();
+        model.addAttribute("list_shop",listShop);
+        return ("/tovarPackage/shops");
+    }
+
+
+    @PostMapping("/tovar/shopAdd")
+    public String shopadd(
+            @RequestParam String address,
+            @RequestParam String nazvanie
+    ) {
+        shop shop = new shop(address,nazvanie);
+        shopRepository.save(shop);
+        return ("redirect:/tovar");
+    }
+
+    @GetMapping("/tovar/shop_tovarAdd")
+    public String shop_tovarAdd(Model model)
+    {
+        Iterable<Tovar> tovars = tovarRepository.findAll();
+        model.addAttribute("tovar", tovars);
+        Iterable<shop> shopp = shopRepository.findAll();
+        model.addAttribute("shops", shopp);
+
+        return ("/tovarPackage/shop_tovarAdd");
+    }
+
+    @PostMapping("/tovar/shop_tovarAdd")
+    public String shop_tovarAdd(
+            @RequestParam String shop,
+            @RequestParam String tovar
+    ) {
+        Tovar t = tovarRepository.findBynameTovar(Arrays.stream((tovar.split(" "))).toList().get(0)).get(0);
+        shop shops = shopRepository.findByaddress(shop);
+        List<shop> ss =t.getShops();
+        ss.add(shops);
+        t.setShops(ss);
+        tovarRepository.save(t);
+        return ("redirect:/tovar");
+    }
 }
+

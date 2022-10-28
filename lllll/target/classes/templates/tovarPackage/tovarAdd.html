@@ -25,6 +25,21 @@
         <input th:field="*{kolvo}" name="kolvo" type="number" placeholder="Кол-во" style="margin:10px">
         <div th:if="${#fields.hasErrors('kolvo')}" th:errors="*{kolvo}" style="color: black"></div><br><br>
 
+        <p style="margin:10px">
+            <select  name="stranaProizv" style="width:190px">
+        <div th:each="element : ${parametris}">
+            <option th:text="${element.stranaProizv}"></option>
+        </div><br>
+        </select>
+        </p>
+        <p style="margin:10px">
+            <select  name="name" style="width:190px">
+        <div th:each="element : ${provider}">
+            <option th:text="${element.name}"></option>
+        </div>
+        <br>
+        </select>
+        </p>
         <input style="margin:10px" type="submit" value="Добавить товар">
     </label>
 </form>

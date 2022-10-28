@@ -6,7 +6,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
   <div th:insert="headers/head :: nov"></div>
-  <a class="btn" style="background:SteelBlue"  th:href="'/tovar'" >Назад</a>
 </head>
 
 <body>
@@ -18,9 +17,18 @@
     <p th:text="'Вес: ' + ${el.getVes()}"></p>
     <p th:text="'Цвет: ' + ${el.getCvet()}"></p>
     <p th:text="'Кол-во: ' + ${el.getKolvo()}"></p>
+    <div th:if="${el.Parametris}">
+      <p th:text="'Страна производства: ' + ${el.getstranaProizv()}"></p>
+      <p th:text="'Производитель: ' + ${el.getproizv()}"></p>
+    </div>
+    <div th:if="${el.Provider}">
+      <p th:text="'Поставщик: ' + ${el.getname()}"></p>
+      <p th:text="'Дата поставки: ' + ${el.getdate()}"></p>
+    </div>
     <a class = "btn" style="background:SteelBlue" th:href="'/tovarPackage/tovarEdit/' + ${el.getId()}" >Редактирование</a>
     <a  class = "btn"   style="background:SteelBlue; margin-left:10px" th:href="'/tovarPackage/delete/' + ${el.getId()}" >Удаление</a>
   </div>
+  <a class="btn" style="background:SteelBlue; margin-top:10px"  th:href="'/tovar'" >Назад</a>
   <br>
 
 </div>

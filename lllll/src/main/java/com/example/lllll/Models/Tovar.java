@@ -1,13 +1,10 @@
 package com.example.lllll.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 
 @Entity
@@ -27,6 +24,20 @@ public class Tovar {
     private String cvet;
     @NotNull(message = "Поле не должно быть пустым!")
     private Integer kolvo;
+
+    @OneToOne(optional = true,cascade = CascadeType.ALL)
+    @JoinColumn(name="parametris_id")
+    private parametris Parametris;
+
+    @ManyToOne(optional = true, cascade = CascadeType.ALL)
+    private Provider provider;
+
+    @ManyToMany
+    @JoinTable(name = "shop_tovar",
+            joinColumns = @JoinColumn(name ="tovar_id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id"))
+    private List<shop> shops;
+
 
     public Long getId() {
         return id;
@@ -70,6 +81,33 @@ public class Tovar {
         this.kolvo = kolvo;
     }
 
+    public parametris getParametris() {
+        return Parametris;
+    }
+    public void setParametris(parametris Parametris) {
+        this.Parametris = Parametris;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    public String getstranaProizv(){return Parametris.getstranaProizv();}
+    public String getproizv(){return Parametris.getproizv();}
+
+    public String getname(){return provider.getname();}
+    public String getdate(){return provider.getdate();}
+
+    public List<shop> getShops() {
+        return shops;
+    }
+    public void setShops(List<shop> shops1) {
+        this.shops = shops1;
+    }
+
     public Tovar(){ }
 
     public Tovar(String nameTovar, Integer articul, Integer ves, String cvet, Integer kolvo) {
@@ -78,5 +116,7 @@ public class Tovar {
         this.ves = ves;
         this.cvet = cvet;
         this.kolvo = kolvo;
+        this.Parametris = Parametris;
+        this.provider = provider;
     }
 }
