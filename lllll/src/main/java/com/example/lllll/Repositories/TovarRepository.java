@@ -9,4 +9,6 @@ public interface TovarRepository extends CrudRepository<Tovar, Long> {
 
     public List<Tovar> findBynameTovar(String tovars);
     public List<Tovar> findBynameTovarContains(String tovars);
+    public Tovar findByid(String id);
+    public Tovar findByusername(String username);
 }

@@ -5,10 +5,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
 public class Tovar {
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,6 +108,21 @@ public class Tovar {
     public String getname(){return provider.getname();}
     public String getdate(){return provider.getdate();}
 
+    private String username;
+    private String password;
+    private Boolean active;
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
     public List<shop> getShops() {
         return shops;
     }
@@ -110,7 +132,11 @@ public class Tovar {
 
     public Tovar(){ }
 
-    public Tovar(String nameTovar, Integer articul, Integer ves, String cvet, Integer kolvo) {
+    public Tovar(String username, String password, Boolean active,Set<Role> roles, String nameTovar, Integer articul, Integer ves, String cvet, Integer kolvo, parametris Parametris, Provider provider) {
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.roles = roles;
         this.nameTovar = nameTovar;
         this.articul = articul;
         this.ves = ves;

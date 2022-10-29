@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 
 public interface parametrisRepository extends CrudRepository<parametris, Long> {
-    parametris findBystranaProizv (String parametris);
+    parametris findBystranaProizv (String stranaProizv);
 }
