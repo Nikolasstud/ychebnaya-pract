@@ -130,7 +130,7 @@ public class Tovar {
         this.shops = shops1;
     }
 
-    public Tovar(){ }
+    public Tovar() { }
 
     public Tovar(String username, String password, Boolean active,Set<Role> roles, String nameTovar, Integer articul, Integer ves, String cvet, Integer kolvo, parametris Parametris, Provider provider) {
         this.username = username;

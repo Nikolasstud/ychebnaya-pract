@@ -1,10 +1,7 @@
 package com.example.lllll.controlers;
 
-import com.example.lllll.Models.Tovar;
+import com.example.lllll.Models.*;
 import com.example.lllll.Repositories.TovarRepository;
-import com.example.lllll.Models.parametris;
-import com.example.lllll.Models.Provider;
-import com.example.lllll.Models.shop;
 import com.example.lllll.Repositories.parametrisRepository;
 import com.example.lllll.Repositories.providerRepository;
 import com.example.lllll.Repositories.shopRepository;
@@ -213,6 +210,40 @@ public class TovarController {
         t.setShops(ss);
         tovarRepository.save(t);
         return ("redirect:/tovar");
+    }
+
+    @GetMapping("/tovar/admin")
+    public String AdminPanel(Model model) {
+
+        Iterable<Tovar> list_tovar = tovarRepository.findAll();
+        model.addAttribute(("list_tovar"), list_tovar);
+        return ("tovarPackage/adminPanel");
+    }
+
+    @GetMapping("/tovar/admin/Edit-role/{id}")
+    public String EmployeeRoleEdit(Model model,
+                                   @PathVariable long id) {
+
+        Tovar t = tovarRepository.findById(id).orElseThrow();
+        model.addAttribute("tovar", t);
+        model.addAttribute("listRoles", Role.values());
+        return("/tovarPackage/Edit-role");
+    }
+
+    @PostMapping("/tovar/admin/Edit-role/{id}")
+    public String EmployeeRoleEdit(@PathVariable long id,
+                                   @RequestParam String[] roles) {
+
+        Tovar t = tovarRepository.findById(id).orElseThrow();
+        t.getRoles().clear();
+
+        for(String role: roles){
+            t.getRoles().add(Role.valueOf(role));
+        }
+
+        tovarRepository.save(t);
+
+        return("redirect:/tovar/admin");
     }
 }
 
